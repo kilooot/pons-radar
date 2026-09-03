@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Pons Radar">
+  <rect width="128" height="128" rx="28" fill="#0B0C0A"/>
+  <g fill="none" stroke="#C6A65A" stroke-width="2.2">
+    <circle cx="64" cy="58" r="34"/>
+    <circle cx="64" cy="58" r="22"/>
+    <circle cx="64" cy="58" r="10"/>
+  </g>
+  <path d="M64 24 V108" stroke="#C6A65A" stroke-width="2.2"/>
+  <path d="M64 58 L98 42" fill="#C6A65A"/>
+</svg>
