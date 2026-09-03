@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pons Radar — Robinhood Chain Graduation Desk</title>
+  <meta name="description" content="A read-only desk for Pons Family launches on Robinhood Chain. Track graduation progress, live buys, and graduated tokens." />
+  <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/logo.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #090a08; --bg2: #10120e; --card: #141711; --line: #2a2c24;
+      --text: #f3efe4; --muted: #9a9586; --gold: #c6a65a; --gold2: #e4c57a;
+      --hot: #d27a43; --ok: #8fbf8a;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: var(--bg); color: var(--text); font-family: Outfit, system-ui, sans-serif; }
+    body { min-height: 100vh; }
+    a { color: inherit; }
+    .shell { max-width: 1120px; margin: 0 auto; padding: 22px 18px 72px; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 18px; border-bottom: 1px solid var(--line); margin-bottom: 22px; }
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .brand img { width: 42px; height: 42px; border-radius: 12px; object-fit: cover; border: 1px solid #3a3424; }
+    .brand-name { font-family: "Cormorant Garamond", serif; font-size: 28px; line-height: 1; font-weight: 600; }
+    .brand-meta { color: var(--muted); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; margin-top: 3px; }
+    .top-links { display: flex; gap: 8px; flex-wrap: wrap; }
+    .ghost { border: 1px solid var(--line); background: transparent; color: var(--text); border-radius: 999px; padding: 8px 12px; font: 500 12px Outfit, sans-serif; text-decoration: none; cursor: pointer; }
+    .hero h1 { font-family: "Cormorant Garamond", serif; font-size: clamp(32px, 5vw, 52px); font-weight: 500; margin: 0 0 8px; letter-spacing: -0.03em; }
+    .hero p { margin: 0; color: var(--muted); max-width: 560px; line-height: 1.6; }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0; }
+    .stat { background: var(--bg2); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; }
+    .stat b { display: block; font-size: 18px; font-weight: 600; }
+    .stat span { color: var(--muted); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    .tabs { display: flex; flex-wrap: wrap; gap: 4px; background: var(--bg2); border: 1px solid var(--line); border-radius: 999px; padding: 4px; }
+    .tab { border: 0; background: transparent; color: var(--muted); cursor: pointer; padding: 8px 13px; border-radius: 999px; font: 500 12px Outfit, sans-serif; }
+    .tab.active { background: var(--gold); color: #16140d; }
+    input, select { background: var(--bg2); border: 1px solid var(--line); color: var(--text); border-radius: 999px; padding: 9px 12px; font: 400 13px Outfit, sans-serif; }
+    input { min-width: 220px; flex: 1; }
+    .status { color: var(--muted); font-size: 12px; margin: 0 0 14px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 12px; }
+    .card { background: linear-gradient(180deg, #171910, #10120e); border: 1px solid var(--line); border-radius: 18px; padding: 13px; cursor: pointer; }
+    .card:hover { border-color: #4a4432; }
+    .card.watched { border-color: #6d5b2e; }
+    .row-top { display: flex; gap: 10px; align-items: center; }
+    .thumb { width: 48px; height: 48px; border-radius: 12px; object-fit: cover; background: #1c1e16; }
+    .ph { display: grid; place-items: center; color: #16140d; background: var(--gold); font-size: 12px; font-weight: 700; }
+    .name { font-weight: 600; }
+    .sym { color: var(--muted); font-size: 12px; font-family: "IBM Plex Mono", monospace; }
+    .badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 5px; }
+    .badge { font-size: 10px; padding: 2px 7px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+    .gold { color: var(--gold2); border-color: #4d4224; }
+    .hot { color: var(--hot); border-color: #5a351c; }
+    .ok { color: var(--ok); border-color: #2c4630; }
+    .mcap { display: flex; justify-content: space-between; margin-top: 12px; font-size: 13px; }
+    .bar { height: 4px; background: #23261c; border-radius: 99px; overflow: hidden; margin: 8px 0 7px; }
+    .bar i { display: block; height: 100%; background: var(--gold); }
+    .bar.hot i { background: var(--hot); }
+    .meta { display: flex; justify-content: space-between; color: var(--muted); font-size: 11px; font-family: "IBM Plex Mono", monospace; }
+    .empty { border: 1px dashed var(--line); border-radius: 16px; padding: 40px 16px; text-align: center; color: var(--muted); }
+    .drawer-bg { position: fixed; inset: 0; background: rgba(0,0,0,.55); display: none; z-index: 20; }
+    .drawer-bg.show { display: block; }
+    .drawer { position: fixed; right: 0; top: 0; height: 100%; width: min(420px, 100%); background: #10120e; border-left: 1px solid var(--line); z-index: 21; transform: translateX(110%); transition: transform .2s ease; overflow: auto; padding: 22px; }
+    .drawer.show { transform: translateX(0); }
+    .drawer h2 { font-family: "Cormorant Garamond", serif; font-size: 32px; margin: 10px 0 4px; font-weight: 500; }
+    .kv { display: flex; justify-content: space-between; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+    .kv b { color: var(--muted); font-weight: 500; }
+    .kv span { word-break: break-all; text-align: right; font-family: "IBM Plex Mono", monospace; font-size: 11px; }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+    .btn { background: var(--gold); color: #16140d; border: 0; border-radius: 999px; padding: 10px 14px; font: 600 13px Outfit, sans-serif; text-decoration: none; cursor: pointer; }
+    .btn.alt { background: transparent; color: var(--text); border: 1px solid var(--line); }
+    footer { margin-top: 36px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; line-height: 1.7; }
+    @media (max-width: 720px) { .stats { grid-template-columns: 1fr 1fr; } .brand-name { font-size: 22px; } }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="/">
+        <img src="/logo.jpg" alt="Pons Radar" />
+        <div>
+          <div class="brand-name">Pons Radar</div>
+          <div class="brand-meta">Robinhood Chain desk</div>
+        </div>
+      </a>
+      <div class="top-links">
+        <a class="ghost" href="https://www.ponsfamily.com/launchpad" target="_blank" rel="noreferrer">Pons Launchpad</a>
+        <a class="ghost" href="https://robinhoodchain.blockscout.com" target="_blank" rel="noreferrer">Explorer</a>
+      </div>
+    </header>
+    <section class="hero">
+      <h1>Watch the tokens approaching graduation.</h1>
+      <p>An independent, read-only desk for Pons Family launches. No wallet. No custody. Market data is sourced from the public Pons interface.</p>
+    </section>
+    <div class="stats" id="stats"></div>
+    <div class="toolbar">
+      <div class="tabs" id="tabs">
+        <button class="tab active" data-view="radar">Radar</button>
+        <button class="tab" data-view="live">Live buys</button>
+        <button class="tab" data-view="new">Newest</button>
+        <button class="tab" data-view="graduated">Graduated</button>
+        <button class="tab" data-view="watch">Watchlist</button>
+      </div>
+      <input id="q" placeholder="Search name, ticker, or address" />
+      <select id="minPct">
+        <option value="0">Any progress</option>
+        <option value="25">25%+</option>
+        <option value="50" selected>50%+</option>
+        <option value="75">75%+</option>
+        <option value="90">90%+</option>
+      </select>
+      <select id="age">
+        <option value="all">All ages</option>
+        <option value="24h">Last 24h</option>
+        <option value="7d">Last 7d</option>
+      </select>
+      <button class="ghost" id="refresh">Refresh</button>
+    </div>
+    <p class="status" id="status">Loading market desk…</p>
+    <div class="grid" id="grid"></div>
+    <footer>
+      Pons Radar is an independent viewer and is not affiliated with Pons Labs or Robinhood.
+      Token launches are highly speculative. Nothing here is financial advice.
+      Do not deposit private keys into this app.
+    </footer>
+  </div>
+  <div class="drawer-bg" id="drawerBg"></div>
+  <aside class="drawer" id="drawer"></aside>
+  <script>
+    const WATCH_KEY = "pons-radar-watch";
+    const state = { view: "radar", items: [], totals: {}, watch: new Set(JSON.parse(localStorage.getItem(WATCH_KEY) || "[]")), selected: null };
+    const el = (id) => document.getElementById(id);
+    function saveWatch() { localStorage.setItem(WATCH_KEY, JSON.stringify([...state.watch])); }
+    function fmtUsd(n) {
+      if (n == null || Number.isNaN(Number(n))) return "—";
+      const x = Number(n);
+      if (x >= 1e9) return "$" + (x / 1e9).toFixed(2) + "B";
+      if (x >= 1e6) return "$" + (x / 1e6).toFixed(2) + "M";
+      if (x >= 1e3) return "$" + (x / 1e3).toFixed(1) + "K";
+      return "$" + x.toFixed(2);
+    }
+    function fmtAmt(n) { if (n == null || Number.isNaN(Number(n))) return "—"; return Number(n).toFixed(3); }
+    function timeAgo(iso) {
+      if (!iso) return "—";
+      const s = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000);
+      if (s < 60) return Math.floor(s) + "s";
+      if (s < 3600) return Math.floor(s / 60) + "m";
+      if (s < 86400) return Math.floor(s / 3600) + "h";
+      return Math.floor(s / 86400) + "d";
+    }
+    function quoteLabel(item) { return item.quoteAsset?.symbol || "ETH"; }
+    function pct(item) { const n = Number(item.graduationProgressPct); return Number.isFinite(n) ? n : 0; }
+    function escapeHtml(s) { return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+    function viewConfig() {
+      if (state.view === "live") return { sort: "recentBuys", includeGraduated: 0, source: "launches" };
+      if (state.view === "new") return { sort: "newest", includeGraduated: 0, source: "launches" };
+      if (state.view === "graduated") return { sort: "marketCap", includeGraduated: 1, source: "graduations" };
+      if (state.view === "watch") return { sort: "marketCap", includeGraduated: 0, source: "watch" };
+      return { sort: "marketCap", includeGraduated: 0, source: "launches" };
+    }
+    async function load() {
+      const cfg = viewConfig();
+      el("status").textContent = "Fetching live Pons data…";
+      try {
+        let items = [];
+        if (cfg.source === "graduations") {
+          const data = await fetch("/api/graduations").then((r) => r.json());
+          if (data.error) throw new Error(data.message || data.error);
+          items = Array.isArray(data) ? data : data.items || [];
+          state.totals = { graduated: items.length };
+        } else if (cfg.source === "watch") {
+          const data = await fetch("/api/launches?sort=marketCap&age=all&page=1&pageSize=50&includeGraduated=0").then((r) => r.json());
+          const extra = await fetch("/api/graduations").then((r) => r.json()).catch(() => []);
+          const pool = [...(data.active?.items || []), ...(Array.isArray(extra) ? extra : [])];
+          items = pool.filter((t) => state.watch.has((t.token || "").toLowerCase()));
+          state.totals = { active: data.activeTotal, graduated: data.graduatedTotal, launches: data.launchTotal };
+        } else {
+          const age = el("age").value;
+          const data = await fetch("/api/launches?sort=" + cfg.sort + "&age=" + age + "&page=1&pageSize=50&includeGraduated=" + cfg.includeGraduated).then((r) => r.json());
+          if (data.error) throw new Error(data.message || data.error);
+          items = data.active?.items || [];
+          state.totals = { active: data.activeTotal, graduated: data.graduatedTotal, launches: data.launchTotal };
+        }
+        state.items = items;
+        render();
+      } catch (err) {
+        el("grid").innerHTML = '<div class="empty">Could not load the desk: ' + escapeHtml(err.message) + "</div>";
+        el("status").textContent = "Upstream unavailable";
+      }
+    }
+    function filtered() {
+      const q = el("q").value.trim().toLowerCase();
+      const min = Number(el("minPct").value || 0);
+      return state.items.filter((item) => {
+        const p = pct(item);
+        if (state.view === "radar" && p < min) return false;
+        if (state.view !== "radar" && state.view !== "watch" && min > 0 && p < min && !item.graduated) return false;
+        if (!q) return true;
+        return [item.name, item.symbol, item.token, item.deployer, item.description].join(" ").toLowerCase().includes(q);
+      });
+    }
+    function renderStats() {
+      const t = state.totals;
+      const n = (v) => (v == null ? "—" : Number(v).toLocaleString("en-US"));
+      el("stats").innerHTML = '<div class="stat"><b>' + n(t.launches) + "</b><span>Launches</span></div>" +
+        '<div class="stat"><b>' + n(t.active) + "</b><span>Indexed active</span></div>" +
+        '<div class="stat"><b>' + n(t.graduated) + "</b><span>Graduated</span></div>" +
+        '<div class="stat"><b>' + state.watch.size + "</b><span>Watchlist</span></div>";
+    }
+    function cardHTML(item) {
+      const p = pct(item);
+      const watched = state.watch.has((item.token || "").toLowerCase());
+      const hot = p >= 75 && !item.graduated;
+      const img = item.logoUrl
+        ? '<img class="thumb" src="' + item.logoUrl + '" alt="" />'
+        : '<div class="thumb ph">' + escapeHtml((item.symbol || "?").slice(0, 3)) + "</div>";
+      return '<article class="card ' + (watched ? "watched" : "") + '" data-token="' + item.token + '"><div class="row-top">' + img +
+        "<div><div class=\"name\">" + escapeHtml(item.name || "Untitled") + "</div><div class=\"sym\">$" + escapeHtml(item.symbol || "") + "</div>" +
+        '<div class="badges"><span class="badge gold">' + (item.version || "v1") + '</span><span class="badge">' + quoteLabel(item) + "</span>" +
+        (item.graduated ? '<span class="badge ok">Graduated</span>' : hot ? '<span class="badge hot">Near threshold</span>' : "") +
+        (watched ? '<span class="badge gold">Watching</span>' : "") +
+        "</div></div></div><div class=\"mcap\"><span>" + fmtUsd(item.marketCapUsd) + "</span><span>" + (item.graduated ? "100%" : p.toFixed(2) + "%") +
+        '</span></div><div class="bar ' + (hot ? "hot" : "") + '"><i style="width:' + Math.min(100, p) + '%"></i></div><div class="meta"><span>' +
+        fmtAmt(item.pairedPrincipalEth) + " / " + fmtAmt(item.graduationThresholdEth) + " " + quoteLabel(item) + "</span><span>" +
+        timeAgo(item.latestBuyAt || item.launchedAt) + "</span></div></article>";
+    }
+    function render() {
+      renderStats();
+      const list = filtered();
+      if (state.view === "radar") list.sort((a, b) => pct(b) - pct(a));
+      el("status").textContent = list.length + " tokens • updated " + new Date().toLocaleTimeString("en-US");
+      if (!list.length) { el("grid").innerHTML = '<div class="empty">No tokens match these filters.</div>'; return; }
+      el("grid").innerHTML = list.map(cardHTML).join("");
+    }
+    function openDrawer(item) {
+      state.selected = item;
+      const watched = state.watch.has((item.token || "").toLowerCase());
+      el("drawer").innerHTML = '<button class="ghost" id="closeDrawer">Close</button><h2>' + escapeHtml(item.name || "") +
+        '</h2><div class="sym">$' + escapeHtml(item.symbol || "") + " · " + (item.version || "") + '</div><p style="color:var(--muted);font-size:14px;white-space:pre-wrap">' +
+        escapeHtml(item.description || "No description provided.") + "</p>" +
+        '<div class="kv"><b>Progress</b><span>' + (item.graduated ? "Graduated" : pct(item).toFixed(2) + "%") + "</span></div>" +
+        '<div class="kv"><b>Market cap</b><span>' + fmtUsd(item.marketCapUsd) + "</span></div>" +
+        '<div class="kv"><b>Price</b><span>' + (item.priceUsd != null ? Number(item.priceUsd).toPrecision(4) : "—") + "</span></div>" +
+        '<div class="kv"><b>Paired / threshold</b><span>' + fmtAmt(item.pairedPrincipalEth) + " / " + fmtAmt(item.graduationThresholdEth) + " " + quoteLabel(item) + "</span></div>" +
+        '<div class="kv"><b>Quote asset</b><span>' + escapeHtml(item.quoteAsset && item.quoteAsset.name || quoteLabel(item)) + "</span></div>" +
+        '<div class="kv"><b>Contract</b><span>' + item.token + "</span></div>" +
+        '<div class="kv"><b>Creator</b><span>' + item.deployer + "</span></div>" +
+        '<div class="kv"><b>Launched</b><span>' + (item.launchedAt ? new Date(item.launchedAt).toLocaleString("en-US") : "—") + "</span></div>" +
+        '<div class="kv"><b>Last buy</b><span>' + (item.latestBuyAt ? new Date(item.latestBuyAt).toLocaleString("en-US") : "—") + "</span></div>" +
+        '<div class="actions"><a class="btn" href="' + item.ponsUrl + '" target="_blank" rel="noreferrer">Open on Pons</a>' +
+        '<a class="btn alt" href="' + item.explorerUrl + '" target="_blank" rel="noreferrer">Explorer</a>' +
+        '<button class="btn alt" id="watchBtn">' + (watched ? "Remove from watchlist" : "Add to watchlist") + '</button>' +
+        '<button class="btn alt" id="copyBtn">Copy contract</button></div>';
+      el("drawer").classList.add("show");
+      el("drawerBg").classList.add("show");
+      el("closeDrawer").onclick = closeDrawer;
+      el("watchBtn").onclick = function () { toggleWatch(item.token); };
+      el("copyBtn").onclick = async function () { await navigator.clipboard.writeText(item.token); el("copyBtn").textContent = "Copied"; };
+    }
+    function closeDrawer() { el("drawer").classList.remove("show"); el("drawerBg").classList.remove("show"); }
+    function toggleWatch(token) {
+      const key = (token || "").toLowerCase();
+      if (state.watch.has(key)) state.watch.delete(key); else state.watch.add(key);
+      saveWatch(); render();
+      if (state.selected && state.selected.token === token) openDrawer(state.selected);
+    }
+    document.getElementById("tabs").addEventListener("click", function (e) {
+      const btn = e.target.closest(".tab");
+      if (!btn) return;
+      state.view = btn.dataset.view;
+      document.querySelectorAll(".tab").forEach(function (t) { t.classList.toggle("active", t === btn); });
+      load();
+    });
+    el("q").addEventListener("input", render);
+    el("minPct").addEventListener("change", render);
+    el("age").addEventListener("change", load);
+    el("refresh").addEventListener("click", load);
+    el("drawerBg").addEventListener("click", closeDrawer);
+    el("grid").addEventListener("click", function (e) {
+      const card = e.target.closest(".card");
+      if (!card) return;
+      const item = state.items.find(function (x) { return x.token === card.dataset.token; });
+      if (item) openDrawer(item);
+    });
+    load();
+    setInterval(function () { if (!document.hidden) load(); }, 25000);
+  </script>
+</body>
+</html>
